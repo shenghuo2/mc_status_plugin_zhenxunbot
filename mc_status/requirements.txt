@@ -1,0 +1,6 @@
+nonebot==1.9.1
+requests==2.25.1
+mcstatus
+re
+io
+base64
