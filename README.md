@@ -4,7 +4,7 @@
 
 基于[zhenxunbot](https://github.com/HibiKier/zhenxun_bot)和[mcstatus](https://github.com/py-mine/mcstatus)模块开发的minecraft服务器状态查询插件
 
-以图片的形式返回查询结果	满足~~(我的)~~强迫症
+以图片的形式返回查询结果	满足 ~~(我的)~~ 强迫症
 
 ### 版本
 
