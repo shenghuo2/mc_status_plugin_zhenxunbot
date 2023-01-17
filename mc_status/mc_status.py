@@ -105,7 +105,7 @@ def mc_status_get(ip):
             draw_text(375, 85, version, fill='white', fontsize=15)
         else:
             draw_text(375, 95, version, fill='white', fontsize=15)
-        # 图片写入内存流 并转换为base64
+        # 图片写入内存流 并转换为 base64
         buffer = io.BytesIO()
         frame.save(buffer,"PNG")
         buf_bytes=buffer.getvalue()
