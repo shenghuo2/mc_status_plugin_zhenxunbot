@@ -76,9 +76,7 @@ pip3 install -r requirements.txt
 
 发现其他问题，比如1.17后高版本的RGB三原色渐变
 
-(增加了字体bug)
-
-
+增加了字体bug (由于字库不全)
 
 
 
