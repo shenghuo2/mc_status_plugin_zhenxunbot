@@ -9,8 +9,8 @@ def mc_status_get(ip):
     server = JavaServer.lookup(ip)
     try:
         status = server.status()
-        # ping值
-        ping = str("PING \n" + str(status.latency)[:8:] + "ms")
+        # ping值 保留小数点后3位
+        ping = str("PING \n" + '{:0.3f}'.format(status.latency) + "ms")
         # 版本
         version = str(status.version.name)
         # 在线人数
@@ -18,81 +18,84 @@ def mc_status_get(ip):
         onlineCount = "在线人数： " + str(onp)
         # MOTD
         discribe = str(status.description)
-        # 替换掉色彩符号
-        
-        # discribe = discribe.replace("§a","").replace("§b","").replace("§c","").replace("§d","").replace("§e","").replace("§f","").replace("§l","").replace("§m","").replace("§n","")
-        # discribe = discribe.replace("§0","").replace("§1","").replace("§2","").replace("§3","").replace("§4","").replace("§5","").replace("§6","").replace("§7","").replace("§8","").replace("§9","")
+        # 替换掉样式代码 klnmor
+        discribe = discribe.replace('§k','').replace('§l','').replace('§m','').replace('§n','').replace('§o','').replace('§r','')
         # logo
         pic = base64.b64decode(status.favicon[22::])
         open('logo1.png', 'wb').write(pic)
         fr = Image.open('logo1.png').resize((100,100))
-        frame = Image.new("RGB", (640, 128), (5, 5, 5))
+        frame = Image.new("RGB", (800, 128), (25, 25, 25))
         frame.paste(fr, (10 , 14))
         draw = ImageDraw.Draw(frame)
         # 字体函数定义
         def draw_text(x, y,text, fill,fontsize,):
             # import os
             # print("路径为："+os.getcwd())
-            font = ImageFont.truetype('msyh.ttc', fontsize)
+            font = ImageFont.truetype('Arial-Unicode-Regular.ttf', fontsize)
             draw.text((x, y), text, fill=fill, font=font)
 
         # draw_text(128, 25, discribe, fill=(255,170,0), fontsize=15)
         # 更新为支持分节符的版本
+        def colorful_describe():
+
+            font_ = ImageFont.truetype("Arial-Unicode-Regular.ttf", 17)
+
+            # Define the text to be added to the image
+
+            # Define the color codes
+            color_codes = {
+                '§0': (0, 0, 0),
+                '§1': (0, 0, 170),
+                '§2': (0, 170, 0),
+                '§3': (0, 170, 170),
+                '§4': (170, 0, 0),
+                '§5': (170, 0, 170),
+                '§6': (255, 170, 0),
+                '§7': (170, 170, 170),
+                '§8': (85, 85, 85),
+                '§9': (85, 85, 255),
+                '§a': (85, 255, 85),
+                '§b': (85, 255, 255),
+                '§c': (255, 85, 85),
+                '§d': (255, 85, 255),
+                '§e': (255, 255, 85),
+                '§f': (255, 255, 255),
+                '§g': (221, 214, 5)
+            }
+
+            # Split the text by the key identifier
+            parts = discribe.split("§")
+            print(parts)
+
+            # Set the starting x and y position for the text
+            x = 128
+            y = 15
+
+            # Loop through the parts of the text
+            for part in parts:
+                if part:
+                    # Get the color code for the current part
+                    
+                    color_code = part[0]
+                    color = color_codes.get(f"§{color_code}", (0, 0, 0))
+
+                    # Get the text for the current part (excluding the color code)
+                    text_ = part[1:]
+
+                    # Draw the text on the image
+                    draw.text((x, y), u'{}'.format(text_) , fill=color, font=font_)
+
+                    # Get the width and height of the text
+                    width, height = draw.textsize(text_, font=font_)
+                    if '\n' in part:
+                        y += height
+                        x = 128
+                        continue
+
+                    # Update the x position for the next piece of text
+                    x += width
         
-        font_ = ImageFont.truetype("msyh.ttc", 16)
-
-        # Define the text to be added to the image
-
-        # Define the color codes
-        color_codes = {
-            '§0': (0, 0, 0),
-            '§1': (0, 0, 170),
-            '§2': (0, 170, 0),
-            '§3': (0, 170, 170),
-            '§4': (170, 0, 0),
-            '§5': (170, 0, 170),
-            '§6': (255, 170, 0),
-            '§7': (170, 170, 170),
-            '§8': (85, 85, 85),
-            '§9': (85, 85, 255),
-            '§a': (85, 255, 85),
-            '§b': (85, 255, 255),
-            '§c': (255, 85, 85),
-            '§d': (255, 85, 255),
-            '§e': (255, 255, 85),
-            '§f': (255, 255, 255),
-            '§g': (221, 214, 5)
-        }
-
-        # Split the text by the key identifier
-        parts = discribe.split("§")
-
-        # Set the starting x and y position for the text
-        x = 128
-        y = 25
-
-        # Loop through the parts of the text
-        for part in parts:
-            if part:
-                # Get the color code for the current part
-                color_code = part[0]
-                color = color_codes.get(f"§{color_code}", (0, 0, 0))
-
-                # Get the text for the current part (excluding the color code)
-                discribe = part[1:]
-
-                # Draw the text on the image
-                draw.text((x, y), discribe, fill=color, font=font_)
-
-                # Get the width and height of the text
-                width, height = draw.textsize(discribe, font=font_)
-
-                if '\n' in part:
-                    y += height
-                    x = 128
-                    continue
-                # Update the x position for the next piece of text
-                x += width
+        colorful_describe()
         draw_text(570, 25, ping, fill=(124,251,0), fontsize=14)
         draw_text(120, 95, onlineCount , fill=(160, 32, 240), fontsize=17)
         draw_text(335, 95, "版本: ", fill=(130, 111, 90), fontsize=16)
@@ -116,7 +119,7 @@ def mc_status_get(ip):
         print(f"异常为:{e}")
         frame = Image.new("RGB", (350, 100), (5, 5, 5))
         draw = ImageDraw.Draw(frame)
-        draw.text((40, 10), ip + "\n服务器不存在或离线", fill='white', font=ImageFont.truetype('msyh.ttc', 30))
+        draw.text((40, 10), ip + "\n服务器不存在或离线", fill='white', font=ImageFont.truetype('Arial-Unicode-Regular.ttf', 30))
         buffer = io.BytesIO()
         frame.save(buffer,"PNG")
         buf_bytes=buffer.getvalue() # 从内存中取出bytes类型的图片
