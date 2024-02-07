@@ -3,6 +3,7 @@ import io
 from mcstatus import JavaServer
 from PIL import Image, ImageDraw, ImageFilter,ImageFont
 
+
 def mc_status_get(ip):
 
     server = JavaServer.lookup(ip)
